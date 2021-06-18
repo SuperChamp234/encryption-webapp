@@ -11,10 +11,11 @@ class Program extends React.Component{
     };
     this.handleChange = this.handleChange.bind(this);
   }
-  handleChange(event){   //updates the state of react components when anything is changed
+  handleChange(event){ 
+    var output = (event.target.value === "enigma" || event.target.value === "ceasar")? this.state.output : event.target.value  //updates the state of react components when anything is changed
     this.setState({
       [event.target.name]: event.target.value,
-      output: this.state.input,
+      output: output,
     });
   }
   render(){  //render the program
