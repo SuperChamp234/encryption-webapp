@@ -27,25 +27,34 @@ class App extends React.Component{
         [event.target.name]: event.target.value,
         output: output,
       });
+
     }
     handleChangeSettings(event){
-      this.setState({
-        settings: {
-          [event.target.name]: ![this.state.settings.toEncrypt],
-        },
-      });
+      if(event.target.name === "toEncrypt"){
+        this.setState({
+          settings: {
+            [event.target.name]: !this.state.settings.toEncrypt,
+          },
+        });
+      }
+      else {
+        this.setState({
+          settings: {
+            [event.target.name]: event.target.value,
+          },
+        });
+      }
     }
   
     render(){  //render the program
       return(<>
         <Input input={this.state.input} onChange={this.handleChange}/>
         <div className="settings">
-          <EncryptSwitch onChange={this.handleChangeSettings}/>
+          <EncryptSwitch onChange={this.handleChangeSettings} value={this.state.settings.toEncrypt}/>
           <EncryptType selection={this.state.conversionType} onChange={this.handleChange} />
           <Settings conversionType={this.state.conversionType} onChange={this.handleChangeSettings}/>
-          {this.state.settings.toEncrypt}
         </div>
-        <Output output={this.state.output}/></>
+        <Output output={this.state.output}/> </>
       );
     }
   }
