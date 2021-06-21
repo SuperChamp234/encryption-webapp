@@ -5,7 +5,7 @@ function Index(props){ //settings for encryption
       return(
         <div>
           <label>Shift by:</label>
-          <input type="number" id="shift" name="shift" min="0" onChange={props.onChange}></input>
+          <input type="number" id="shift" value={props.shift_value} name="shift" min="0" onChange={props.onChange}></input>
         </div>
       );
     }

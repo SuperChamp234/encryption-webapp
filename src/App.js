@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import { chooseTransformation } from './EncryptionProgram';
 import Input from './components/Input'
 import Settings from './components/Settings'
 import EncryptSwitch from './components/EncryptSwitch'
@@ -11,53 +12,40 @@ class App extends React.Component{
       super(props);
       this.state= {
         input: '',
-        conversionType: '*/-*ceasar',
         output: '',
-        settings: {
-          shift: 0,
-          toEncrypt: true,
-        },
+        conversionType: '*/-*ceasar',
+        shift: 0,
+        toEncrypt: true,
       };
       this.handleChange = this.handleChange.bind(this);
-      this.handleChangeSettings = this.handleChangeSettings.bind(this);
     }
-    handleChange(event){ 
-      var output = (event.target.value === "*/-*enigma" || event.target.value === "*/-*ceasar")? this.state.output : event.target.value  //updates the state of react components when anything is changed
+    updateOutput(){
+      const output = chooseTransformation({
+        input: this.state.input,
+        settings: {
+          shiftAmount: this.state.shift
+        },
+        type: this.state.conversionType,
+        toEncrypt: this.state.toEncrypt,
+      });
+      return output;
+    }
+    handleChange(event){
       this.setState({
         [event.target.name]: event.target.value,
-        output: output,
       });
-
-    }
-    handleChangeSettings(event){
-      if(event.target.name === "toEncrypt"){
-        this.setState({
-          settings: {
-            [event.target.name]: !this.state.settings.toEncrypt,
-          },
-        });
-      }
-      else {
-        this.setState({
-          settings: {
-            [event.target.name]: event.target.value,
-          },
-        });
-      }
-    }
-  
+    }  
     render(){  //render the program
       return(<>
         <Input input={this.state.input} onChange={this.handleChange}/>
         <div className="settings">
-          <EncryptSwitch onChange={this.handleChangeSettings} value={this.state.settings.toEncrypt}/>
+          <EncryptSwitch onChange={this.handleChange} value={this.state.toEncrypt}/>
           <EncryptType selection={this.state.conversionType} onChange={this.handleChange} />
-          <Settings conversionType={this.state.conversionType} onChange={this.handleChangeSettings}/>
+          <Settings conversionType={this.state.conversionType} onChange={this.handleChange} shift_value={this.state.shift}/>
         </div>
-        <Output output={this.state.output}/> </>
+        <Output output={this.updateOutput()}/> </>
       );
     }
   }
-  //---
 
 export default App;
