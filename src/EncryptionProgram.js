@@ -4,8 +4,8 @@ export function chooseTransformation(conversionObj) {
     switch(conversionObj.type) {
         case "*/-*ceasar":
             return caesarCipher.setProperties(conversionObj);
-        // case "Enigma":
-        //     return encrypt(conversionObj);
+        case "Enigma":
+            return enigma.setProperties(conversionObj);
         default:
             console.log("Invalid Conversion Type");
             return null;
@@ -13,6 +13,7 @@ export function chooseTransformation(conversionObj) {
 }
 
 let caesarCipher = {
+
     setProperties: function(conversionObj) {
         let shiftAmount = conversionObj.settings.shiftAmount;
         let shiftedAlphabet = alphabet.substring(shiftAmount) + alphabet.substring(0, shiftAmount);
@@ -26,9 +27,12 @@ let caesarCipher = {
      */
     encrypt: function(input, shiftedAlphabet) {
         let result = "";
-        for (let char of input) {
-            //console.log(char);
-            result += shiftedAlphabet.charAt(alphabet.indexOf(char));
+        for (let char of input.toLowerCase()) {
+            if (alphabet.indexOf(char) != -1) {
+                result += shiftedAlphabet.charAt(alphabet.indexOf(char));
+            } else {
+                result += char;
+            }
         }
         return result;
     },
@@ -40,129 +44,128 @@ let caesarCipher = {
      */
     decrypt: function(input, shiftedAlphabet) {
         let result = "";
-        for (let char of input) {
-            result += alphabet.charAt(shiftedAlphabet.indexOf(char));
+        for (let char of input.toLowerCase()) {
+            if (alphabet.indexOf(char) != -1) {
+                result += alphabet.charAt(shiftedAlphabet.indexOf(char));
+            } else {
+                result += char;
+            }
         }
         return result;
     }
 }
 
-// let enigma = {
+let enigma = {
 
-//     //object that stores the possible rotors
-//     rotorVariants = { 
-//         I: "EKMFLGDQVZNTOWYHXUSPAIBRCJ".toLowerCase(), //too lazy to retype them as lowercase lmao
-//         II: "AJDKSIRUXBLHWTMCQGZNPYFVOE".toLowerCase(),
-//         III: "BDFHJLCPRTXVZNYEIWGAKMUSQO".toLowerCase(),
-//         IV: "ESOVPZJAYQUIRHXLNFTGKDCMWB".toLowerCase(),
-//         V: "VZBRGITYUPSDNHLXAWMJQOFECK".toLowerCase(),
-//         VI: "JPGVOUMFYQBENHZRDKASXLICTW".toLowerCase(),
-//         VII: "NZJHGRCXMYSWBOUFAIVLPEKQDT".toLowerCase(),
-//         VIII: "FKQHTLXOCBJSPDZRAMEWNIUYGV".toLowerCase()},
+    //object that stores the available rotors
+    rotorVariants = {
+        i: "EKMFLGDQVZNTOWYHXUSPAIBRCJ".toLowerCase(), //too lazy to retype them as lowercase lmao
+        ii: "AJDKSIRUXBLHWTMCQGZNPYFVOE".toLowerCase(),
+        iii: "BDFHJLCPRTXVZNYEIWGAKMUSQO".toLowerCase(),
+        iv: "ESOVPZJAYQUIRHXLNFTGKDCMWB".toLowerCase(),
+        v: "VZBRGITYUPSDNHLXAWMJQOFECK".toLowerCase(),
+        vi: "JPGVOUMFYQBENHZRDKASXLICTW".toLowerCase(),
+        vii: "NZJHGRCXMYSWBOUFAIVLPEKQDT".toLowerCase(),
+        viii: "FKQHTLXOCBJSPDZRAMEWNIUYGV".toLowerCase()
+    },
 
-//     //Initializing rotor objects (don't think this is necessary but w/e)
-//     rotorOne = {},
-//     rotorTwo = {},
-//     rotorThree = {},
+    //retrieves user selections needed for encryption
+    setProperties: function(conversionObj) { 
 
-//     //retrieves user selections needed for encryption
-//     setProperties: function() { 
+        let rotorOne = conversionObj.settings.rotorOne; //too lazy to rewrite the prefixes
+        let rotorTwo = conversionObj.settings.rotorTwo;
+        let rotorThree = conversionObj.settings.rotorThree;
 
-//         rotorOne.ring = document.getElementById('rotorOne.ring').value; //gets ring values of rotors
-//         rotorTwo.ring = document.getElementById('rotorTwo.ring').value;
-//         rotorThree.ring = document.getElementById('rotorThree.ring').value;
+        //sets alphabet orientation of rotors
+        for (let rotor in rotorVariants.keys()) { 
+            rotorOne.variant = (rotorOne.variant === rotor) ? rotorVariants[rotor] : rotorOne.variant;
+            rotorTwo.variant = (rotorTwo.variant === rotor) ? rotorVariants[rotor] : rotorTwo.variant;
+            rotorThree.variant = (rotorThree.variant === rotor) ? rotorVariants[rotor] : rotorThree.variant;
+        }
 
-//         rotorOne.variant = document.getElementById('rotorOne.variant').value.toString; //gets variants of rotors
-//         rotorTwo.variant = document.getElementById('rotorTwo.variant').value.toString; //ordered numerically left -> right
-//         rotorThree.variant = document.getElementById('rotorThree.variant').value.toString;
+        rotorOne.variant = rotorOne.variant.substring(rotorOne.ring) + rotorOne.variant.substring(0, rotorOne.ring); //applies rings
+        rotorTwo.variant = rotorTwo.variant.substring(rotorTwo.ring) + rotorOne.variant.substring(0, rotorOne.ring);
+        rotorThree.variant = rotorThree.variant.substring(rotorThree.ring) + rotorOne.variant.substring(0, rotorThree.ring);
 
-//         //sets alphabet orientation of rotors
-//         for (let rotor in rotorVariants.keys()) { 
-//             rotorOne.variant = (rotorOne.variant === rotor) ? rotorVariants[rotor] : rotorOne.variant;
-//             rotorTwo.variant = (rotorTwo.variant === rotor) ? rotorVariants[rotor] : rotorTwo.variant;
-//             rotorThree.variant = (rotorThree.variant === rotor) ? rotorVariants[rotor] : rotorThree.variant;
-//         }
+        this.plugBoard = new Map();
+        let plugPairsArray = conversionObj.plugPairs.split(' ');
 
-//         rotorOne.variant = rotorOne.variant.substring(rotorOne.ring) + rotorOne.variant.substring(0, rotorOne.ring); //applies rings
-//         rotorTwo.variant = rotorTwo.variant.substring(rotorTwo.ring) + rotorOne.variant.substring(0, rotorOne.ring);
-//         rotorThree.variant = rotorThree.variant.substring(rotorThree.ring) + rotorOne.variant.substring(0, rotorThree.ring);
+        //retrieves and sets appropriate number of plug values
+        for (let pair of plugPairsArray) { 
+            let from = pair[0];
+            let to = pair[1];
+            this.plugBoard.set(from, to); //makes it so I only have to iterate through keys
+            this.plugBoard.set(to, from);
+        }
 
-//         rotorOne.pos = document.getElementById('rotorOne.pos').value; //gets position value of rotors
-//         rotorTwo.pos = document.getElementById('rotorTwo.pos').value;
-//         rotorThree.pos = document.getElementById('rotorThree.pos').value;
+        return encrypt(input, rotorOne, rotorTwo, rotorThree, plugBoard);
+    },
 
-//         this.numPlugs = document.getElementById('numPlugs').value;
-//         this.plugBoard = new Map();
+    /**
+     * Encrypts the input using the Enigma machine encryption algorithm
+     * @param  {String} input The input of the user
+     * @return {String} result The output of the Enigma encryption
+     */
+    encrypt: function(input, rotorOne, rotorTwo, rotorThree, plugBoard) {
 
-//         //retrieves and sets appropriate number of plug values
-//         for (let i = 1; i<= numPlugs; i++) { 
-//             let from = document.getElementById('plugIn'+i).value.toString();
-//             let to = document.getElementById('plugOut'+i).value.toString();
-//             this.plugBoard.set(from, to);
-//             this.plugBoard.set(to, from);
-//         }
-//     },
+        let result = "";
 
-//     /**
-//      * Encrypts the input using the Enigma machine encryption algorithm
-//      * @param  {String} input The input of the user
-//      * @return {String} cipher The output of the Enigma encryption
-//      */
-//     encrypt: function(input) {
-//         this.setProperties();
-//         let cipher = "";
+        for (let i in input) {
+            char = input[i]; //just so I don't edit the original value
 
-//         for (let i = 0; i<input.length; i++) {
+            if (alphabet.indexOf(char) === -1) {
+                result += char;
+                continue;
+            }
 
-//             let char = input[i];
-//             convert();
-//             this.updateRotors();
-//             cipher+=char;
+            convert();
+            this.updateRotors();
+            result+=char;
 
-//             //runs procedure to transform char
-//             function convert() { 
+            //runs procedure to transform char
+            function convert() { 
 
-//                 plugSwap();
+                plugSwap();
             
-//                 applyRotor(rotorThree);
-//                 applyRotor(rotorTwo);
-//                 applyRotor(rotorOne);
+                applyRotor(rotorThree);
+                applyRotor(rotorTwo);
+                applyRotor(rotorOne);
                 
-//                 char = alphabet[25-alphabet.indexOf(char)]; //reflector
+                char = alphabet[25-alphabet.indexOf(char)]; //reflector
     
-//                 applyRotor(rotorOne);
-//                 applyRotor(rotorTwo);
-//                 applyRotor(rotorThree);
+                applyRotor(rotorOne);
+                applyRotor(rotorTwo);
+                applyRotor(rotorThree);
     
-//                 plugSwap();
-//             }
+                plugSwap();
+            }
 
-//             //applies any possible plug swaps onto char
-//             function plugSwap() { 
-//                 for (let from in this.plugBoard) {
-//                     if (from === char.toLowerCase) {
-//                         char = this.plugBoard[from];
-//                     }
-//                 }
-//             }
+            //applies any possible plug swaps onto char
+            function plugSwap() { 
+                for (let from in plugBoard) {
+                    if (from === char.toLowerCase) {
+                        char = plugBoard[from];
+                    }
+                }
+            }
             
-//             //applies rotor shift onto char
-//             function applyRotor(rotor) { 
-//                 let index = ( (alphabet.indexOf(char) + applyRotor.pos) % 25)
-//                 char = rotor.variant[index];
-//             }
-//         }
+            //applies rotor shift onto char
+            function applyRotor(rotor) { 
+                let index = ( (alphabet.indexOf(char) + rotor.pos) % 25)
+                char = rotor.variant[index];
+            }
+        }
 
-//         return cipher;
-//     },
+        return result;
+    },
 
-//     //adjusts positions of rotors
-//     updateRotors: function() { 
-//         rotorThree.pos = rotorThree.pos++ % 25;
-//         rotorTwo.pos = (rotorThree.pos % 25) ? rotorTwo.pos : (rotorTwo.pos++ % 25) ; //increments rotorTwo.pos if rotorThree.pos does a full rotation
-//         rotorOne.pos = (rotorTwo.pos % 25) ? rotorOne.pos : (rotorOne.pos++ % 25) ; //increments rotorTwo.pos if rotorThree.pos does a full rotation
-//     }
-// }
+    //adjusts positions of rotors
+    updateRotors: function() { 
+        rotorThree.pos = rotorThree.pos++ % 25;
+        rotorTwo.pos = (rotorThree.pos % 25) ? rotorTwo.pos : (rotorTwo.pos++ % 25) ; //increments rotorTwo.pos if rotorThree.pos does a full rotation
+        rotorOne.pos = (rotorTwo.pos % 25) ? rotorOne.pos : (rotorOne.pos++ % 25) ; //increments rotorTwo.pos if rotorThree.pos does a full rotation
+    }
+}
 
 /**
 let testObject = {
