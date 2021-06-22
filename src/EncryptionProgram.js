@@ -1,8 +1,8 @@
 let alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-function chooseTransformation(conversionObj) { 
+export function chooseTransformation(conversionObj) { 
     switch(conversionObj.type) {
-        case "Caesar Cipher":
+        case "*/-*ceasar":
             return caesarCipher.setProperties(conversionObj);
         // case "Enigma":
         //     return encrypt(conversionObj);
@@ -16,7 +16,7 @@ let caesarCipher = {
     setProperties: function(conversionObj) {
         let shiftAmount = conversionObj.settings.shiftAmount;
         let shiftedAlphabet = alphabet.substring(shiftAmount) + alphabet.substring(0, shiftAmount);
-        return conversionObj.toEncrypt == true ? caesarCipher.encrypt(conversionObj.input, shiftedAlphabet) : caesarCipher.decrypt(conversionObj.input, shiftedAlphabet);
+        return conversionObj.toEncrypt === true ? caesarCipher.encrypt(conversionObj.input, shiftedAlphabet) : caesarCipher.decrypt(conversionObj.input, shiftedAlphabet);
     },
 
     /**
@@ -27,7 +27,7 @@ let caesarCipher = {
     encrypt: function(input, shiftedAlphabet) {
         let result = "";
         for (let char of input) {
-            console.log(char);
+            //console.log(char);
             result += shiftedAlphabet.charAt(alphabet.indexOf(char));
         }
         return result;
