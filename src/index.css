@@ -13,17 +13,11 @@
     align-items: center;     
   justify-items: center;
 }
-/* The switch - the box around the slider */
-.switch {
+.switchclass{
+  display:grid;
   position: relative;
-  display: inline-block;
-  width: 30px;
-  height: 17px;
-}
+  grid-template-columns: 100px 50px 100px ;
+  align-items: center;     
+  justify-items: center;
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
 }

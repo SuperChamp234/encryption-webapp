@@ -1,7 +1,7 @@
 // @ts-check
 let alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-function chooseTransformation(conversionObj) { 
+export function chooseTransformation(conversionObj) { 
     switch(conversionObj.type) {
         case "*/-*ceasar":
             return caesarCipher.setProperties(conversionObj);

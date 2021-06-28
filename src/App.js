@@ -39,11 +39,13 @@ class App extends React.Component{
       return(<>
         <Input input={this.state.input} onChange={this.handleChange}/>
         <div className="settings">
-          <EncryptSwitch onChange={this.handleChange} value={this.state.toEncrypt}/>
+        
+        <div className="switchclass">Encrypt <EncryptSwitch onChange={this.handleChange} value={this.state.toEncrypt}/>  Decrypt</div>
           <EncryptType selection={this.state.conversionType} onChange={this.handleChange} />
           <Settings conversionType={this.state.conversionType} onChange={this.handleChange} shift_value={this.state.shift}/>
         </div>
-        <Output output={this.updateOutput()}/> </>
+        <Output output={this.updateOutput()}/>
+        </>
       );
     }
   }
