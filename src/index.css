@@ -1,14 +1,15 @@
 .root{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 100px 100px;
+    grid-template-columns: 1fr 1.25fr 1fr;
+    grid-template-rows: auto;
     grid-gap: 10px;
     margin-left: 15%;
     margin-right: 15%;
 }
 .settings{
     display:grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    grid-gap: 10px;
     position: relative;
     align-items: center;     
   justify-items: center;

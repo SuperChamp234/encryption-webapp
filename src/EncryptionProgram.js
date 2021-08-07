@@ -5,7 +5,7 @@ export function chooseTransformation(conversionObj) {
     switch(conversionObj.type) {
         case "*/-*ceasar":
             return caesarCipher.setProperties(conversionObj);
-        case "Enigma":
+        case "*/-*enigma":
             return enigma.setProperties(conversionObj);
         default:
             //console.log("Invalid Conversion Type");
