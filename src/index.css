@@ -6,6 +6,17 @@
     margin-left: 15%;
     margin-right: 15%;
 }
+@media (max-width: 650px) {
+  .root{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+  
+}
 .settings{
     display:grid;
     grid-template-rows: auto auto auto;
