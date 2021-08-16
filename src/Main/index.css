@@ -1,0 +1,30 @@
+.settings{
+    display:grid;
+    grid-template-rows: auto auto auto;
+    grid-gap: 10px;
+    position: relative;
+    align-items: center;     
+    justify-items: center;
+    margin-bottom: 40%;
+    margin-top: 20%;
+}
+@media (max-width: 650px) {
+  .settings{
+    display:grid;
+    grid-template-rows: auto auto auto;
+    grid-gap: 10px;
+    position: relative;
+    align-items: center;     
+    justify-items: center;
+    margin-bottom: 0%;
+    margin-top: 0%;  
+  }
+}
+.switchclass{
+  display:grid;
+  position: relative;
+  grid-template-columns: 100px 50px 100px ;
+  align-items: center;     
+  justify-items: center;
+
+}

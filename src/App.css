@@ -1,0 +1,36 @@
+.programbody{
+   display: grid;
+  grid-template-columns: 1fr 1.25fr 1fr; 
+  /* grid-template-rows: auto;  */
+  grid-gap: 10px;
+  margin-left: 15%;
+  margin-right: 15%;
+}
+@media (max-width: 650px) {
+  .programbody{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1.5fr 1fr 1.5fr;
+    grid-gap: 10px;
+    margin-left: 15%;
+    margin-right: 15%;
+  }
+  .programtitle {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    /* text style */
+    font-size: 70%;
+  }
+}
+.programtitle {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  /* text style */
+  font-size: x-large;
+}
